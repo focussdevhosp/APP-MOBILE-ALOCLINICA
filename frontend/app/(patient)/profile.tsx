@@ -10,7 +10,7 @@ import { PATIENT_ME } from "@/src/mockData";
 export default function Profile() {
   const router = useRouter();
 
-  const logout = () => router.replace("/");
+  const logout = () => router.replace("/role-select");
 
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>

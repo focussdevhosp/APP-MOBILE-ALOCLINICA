@@ -43,7 +43,7 @@ export default function Login() {
           </Pressable>
 
           <View style={styles.header}>
-            <PingoAvatar size={96} />
+            <PingoAvatar variant="waving" size={96} bg={COLORS.brandTertiary} />
             <Text style={styles.title}>
               {isDoctor ? "Bem-vindo(a), Doutor(a)!" : "Bem-vindo(a) de volta!"}
             </Text>

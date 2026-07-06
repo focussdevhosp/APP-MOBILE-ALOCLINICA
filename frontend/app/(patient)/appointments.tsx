@@ -50,7 +50,7 @@ export default function Appointments() {
       <ScrollView contentContainerStyle={styles.list} showsVerticalScrollIndicator={false}>
         {filtered.length === 0 ? (
           <View style={styles.empty}>
-            <PingoAvatar size={120} />
+            <PingoAvatar variant="sad" size={140} bg={COLORS.brandTertiary} />
             <Text style={styles.emptyTitle}>Nenhuma consulta {tab === "upcoming" ? "agendada" : "no histórico"}</Text>
             <Text style={styles.emptyDesc}>Quando você agendar uma consulta ela aparecerá aqui.</Text>
             <Pressable testID="empty-book" onPress={() => router.push("/(patient)/search")} style={styles.emptyBtn}>

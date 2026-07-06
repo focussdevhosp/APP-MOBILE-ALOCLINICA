@@ -3,6 +3,14 @@
 ## Overview
 **Alô Clínica** is a complete Brazilian Portuguese telemedicine platform featuring the mascot **Pingo** (a friendly blue penguin doctor). It includes two mobile apps in one bundle: **Patient App** and **Doctor App**, selectable from the landing screen.
 
+## New in v1.1
+- Animated **Splash Screen** (bounce, fade, pulsing dots) with Pingo waving
+- **Onboarding** carousel (3 slides) with different Pingo variations
+- **AI-generated Pingo variants**: logo, waving, thumbs_up, clipboard, sleeping, sad, heart, celebrating (generated via Gemini Nano Banana + Emergent LLM key)
+- **Promo banner** on patient home featuring "Pingo celebrating" variant
+- App icon + adaptive icon + splash updated to Pingo
+- Empty states with expressive Pingo (sad variant for empty appointments, etc.)
+
 ## Product Type
 Mobile App (Expo / React Native) — Frontend-only with mock data (no backend required for demo).
 

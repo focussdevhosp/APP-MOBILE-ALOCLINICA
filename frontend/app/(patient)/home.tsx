@@ -134,6 +134,23 @@ export default function PatientHome() {
           />
         </View>
 
+        {/* Pingo Banner */}
+        <View style={styles.banner}>
+          <LinearGradient
+            colors={[COLORS.brandSecondary, "#FF6B00"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.bannerGrad}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={styles.bannerTag}>PROMOÇÃO PINGO 🎉</Text>
+              <Text style={styles.bannerTitle}>1ª consulta{"\n"}50% OFF</Text>
+              <Text style={styles.bannerDesc}>Clínico geral · Videoconsulta</Text>
+            </View>
+            <PingoAvatar variant="celebrating" size={110} bg="transparent" round={false} />
+          </LinearGradient>
+        </View>
+
         {/* Specialties */}
         <SectionHeader title="Especialidades" onPress={() => router.push("/(patient)/search")} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.specialtiesRow}>
@@ -186,7 +203,7 @@ export default function PatientHome() {
           onPress={() => router.push("/(patient)/pingo")}
           style={styles.pingoCard}
         >
-          <PingoAvatar size={64} />
+          <PingoAvatar variant="heart" size={64} bg="transparent" round={false} />
           <View style={{ flex: 1 }}>
             <Text style={styles.pingoTitle}>Pergunte ao Pingo 🐧</Text>
             <Text style={styles.pingoDesc}>
@@ -375,4 +392,9 @@ const styles = StyleSheet.create({
   },
   pingoTitle: { fontSize: FONT.lg, fontWeight: "700", color: COLORS.brandDark },
   pingoDesc: { fontSize: FONT.sm, color: COLORS.onBrandTertiary, marginTop: 2 },
+  banner: { marginBottom: SPACING.lg, borderRadius: RADIUS.lg, overflow: "hidden", ...SHADOW.strong },
+  bannerGrad: { flexDirection: "row", padding: SPACING.lg, alignItems: "center", minHeight: 130 },
+  bannerTag: { color: "rgba(255,255,255,0.9)", fontSize: 10, fontWeight: "800", letterSpacing: 1 },
+  bannerTitle: { color: "#fff", fontSize: 22, fontWeight: "800", marginTop: 6, lineHeight: 26 },
+  bannerDesc: { color: "rgba(255,255,255,0.9)", fontSize: FONT.sm, marginTop: 4 },
 });
