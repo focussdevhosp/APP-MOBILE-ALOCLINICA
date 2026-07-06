@@ -1,0 +1,177 @@
+{
+  "app_name": "Alô Clínica",
+  "personality": "1 iOS-Native Clean",
+  "personality_one_liner": "A clean, trustworthy, and user-friendly medical platform with a touch of warmth brought by the Pingo mascot.",
+  "color": {
+    "surface": "#FFFFFF",
+    "onSurface": "#1C1C1E",
+    "surfaceSecondary": "#F7F9FC",
+    "onSurfaceSecondary": "#3A3A3C",
+    "surfaceTertiary": "#EDF1F5",
+    "onSurfaceTertiary": "#48484A",
+    "surfaceInverse": "#1C1C1E",
+    "onSurfaceInverse": "#FFFFFF",
+    "brand": "#007AFF",
+    "brandPrimary": "#007AFF",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#FF9500",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#E5F1FF",
+    "onBrandTertiary": "#005BCC",
+    "success": "#34C759",
+    "onSuccess": "#FFFFFF",
+    "warning": "#FFCC00",
+    "onWarning": "#1C1C1E",
+    "error": "#FF3B30",
+    "onError": "#FFFFFF",
+    "info": "#5AC8FA",
+    "onInfo": "#FFFFFF",
+    "border": "#E5E5EA",
+    "borderStrong": "#C7C7CC",
+    "divider": "#E5E5EA"
+  },
+  "typography": {
+    "displayFontFamily": "Plus Jakarta Sans",
+    "textFontFamily": "Plus Jakarta Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous iOS-native padding. Cards never flush to screen edge. Sticky primary CTAs with safe-area clearance.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": 1,
+  "navigation": "bottom_tabs",
+  "icon_set": "Ionicons",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Use for bottom tab bar when content scrolls behind",
+      "Use for sticky headers and bottom-sheet headers",
+      "Use for featured doctor cards over brand-tinted or photo backdrops"
+    ],
+    "dont's": [
+      "Do not use on body content, list rows, or form inputs",
+      "Do not use multiple glass effects layered on top of each other"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Patient App - Onboarding",
+      "purpose": "Introduce the platform with the Pingo mascot and guide to login/register.",
+      "states": {
+        "loading": "Centered spinner",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Full-bleed background with a gradient scrim. Display the Pingo mascot image prominently. Bottom 1/3 contains welcome text and a sticky primary CTA ('Começar') using brandPrimary."
+    },
+    {
+      "name": "Patient App - Home Dashboard",
+      "purpose": "Central hub for patients to view upcoming appointments, search specialties, and access quick actions.",
+      "states": {
+        "loading": "Skeleton loaders for cards and profile area",
+        "empty": "Illustration of Pingo saying 'Nenhuma consulta agendada' with 'Agendar Consulta' CTA",
+        "error": "Error message with retry button"
+      },
+      "layout": "Header with user greeting and notification icon. A 'featured card' with glassmorphism for the next upcoming appointment. A horizontal scroll of 'Especialidades' (tinted icon containers). A 'Consultar Agora' floating action card or pinned section."
+    },
+    {
+      "name": "Patient App - Doctor Search & Profile",
+      "purpose": "Find and view a doctor's profile to book an appointment.",
+      "states": {
+        "loading": "Spinner",
+        "empty": "Pingo with magnifying glass 'Nenhum médico encontrado'",
+        "error": "Error message"
+      },
+      "layout": "Search bar with filters at the top (glass sticky header). List of doctor cards containing their photo, name, specialty, and rating. The Doctor Profile screen has a large hero image of the doctor with a gradient scrim, stats, 'Sobre', and a sticky 'Agendar Consulta' CTA at the bottom."
+    },
+    {
+      "name": "Patient App - Video Consultation",
+      "purpose": "Real-time telemedicine video call interface.",
+      "states": {
+        "loading": "Connecting screen with doctor's avatar",
+        "empty": "N/A",
+        "error": "Call failed message with reconnect button"
+      },
+      "layout": "Full-screen video of the doctor. Small PIP (picture-in-picture) floating view of the patient. A bottom floating glass bar containing controls: Mute, Camera Off, Chat, and End Call (red button)."
+    },
+    {
+      "name": "Doctor App - Home Dashboard",
+      "purpose": "Overview of today's agenda, patient queue, and earnings.",
+      "states": {
+        "loading": "Skeleton of agenda list",
+        "empty": "Pingo holding a calendar 'Nenhum paciente para hoje'",
+        "error": "Error fetching agenda, retry button"
+      },
+      "layout": "Header with 'Resumo de Hoje'. Top metrics cards (Consultas, Ganhos). A vertical list of today's appointments (Patient queue) showing time, patient photo, and a 'Iniciar Chamada' button for the current one."
+    },
+    {
+      "name": "Doctor App - Patient Record (Prontuário)",
+      "purpose": "View patient history and write prescriptions during or after a call.",
+      "states": {
+        "loading": "Spinner",
+        "empty": "No previous records found",
+        "error": "Error fetching records"
+      },
+      "layout": "Sticky header with patient info. Tabs for 'Histórico', 'Prescrições', 'Exames'. Floating action button (FAB) to 'Nova Prescrição' or 'Solicitar Exame'."
+    }
+  ],
+  "images": {
+    "pingo_mascot": {
+      "url": "https://customer-assets.emergentagent.com/job_c46d138b-1879-4fe3-b886-3ba1787aa361/artifacts/4wdvh1uf_pingo-psiquiatra-BknWkeTp.jpg",
+      "alt": "Pingo mascot in doctor lab coat"
+    },
+    "doctor_portrait": {
+      "url": "https://images.unsplash.com/photo-1612531385446-f7e6d131e1d0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODd8MHwxfHNlYXJjaHwyfHxmcmllbmRseSUyMGRvY3RvciUyMHNtaWxpbmclMjBwb3J0cmFpdHxlbnwwfHx8fDE3ODMzMTA2ODJ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Friendly doctor smiling portrait"
+    },
+    "clinic_interior": {
+      "url": "https://images.unsplash.com/photo-1782397132123-0166b524d6bc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxNzV8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBjbGluaWMlMjBpbnRlcmlvciUyMGJyaWdodHxlbnwwfHx8fDE3ODMzMTA2ODJ8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Modern clinic interior bright"
+    },
+    "telemedicine_call": {
+      "url": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHwxfHx0ZWxlbWVkaWNpbmUlMjB2aWRlbyUyMGNhbGwlMjBtb2JpbGV8ZW58MHx8fHwxNzgzMzEwNjgyfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Telemedicine video call mobile"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Develop two separate experiences (Patient App and Doctor App). Navigation should route appropriately based on user type.",
+    "The UI is strictly in Portuguese-BR.",
+    "Use the Pingo mascot image prominently on the Onboarding, Splash, and Empty States for both apps.",
+    "The color palette utilizes the blue and orange from Pingo as primary and secondary brand colors, breaking the general ban because the brief explicitly requires matching the mascot's colors.",
+    "Ensure the video call screen utilizes a full-screen layout with safe-area spacing and a floating glass control bar at the bottom.",
+    "Use Plus Jakarta Sans for all typography, maintaining clean and accessible readability for medical information.",
+    "Follow iOS-Native Clean principles: generous spacing, clear hierarchy, radius 'md', and use glassmorphism for sticky headers and tab bars.",
+    "Implement haptics on primary actions like 'Agendar Consulta', 'Iniciar Chamada', and tab bar presses."
+  ]
+}
