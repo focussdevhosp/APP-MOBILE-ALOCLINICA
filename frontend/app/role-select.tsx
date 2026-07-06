@@ -20,7 +20,7 @@ export default function RoleSelect() {
       <SafeAreaView style={{ flex: 1 }} edges={["top", "bottom"]}>
         <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
           <View style={styles.header}>
-            <PingoAvatar variant="logo" size={160} bg="rgba(255,255,255,0.15)" />
+            <PingoAvatar variant="logo" size={160} />
             <Text testID="app-title" style={styles.title}>Alô Clínica</Text>
             <Text style={styles.subtitle}>
               Sua saúde na palma da mão, com o carinho do Pingo 🐧

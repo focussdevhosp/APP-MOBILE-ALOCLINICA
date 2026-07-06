@@ -72,7 +72,7 @@ export default function Splash() {
         style={StyleSheet.absoluteFill}
       />
       <Animated.View style={[styles.center, logoStyle]}>
-        <PingoAvatar variant="waving" size={200} bg="rgba(255,255,255,0.15)" />
+        <PingoAvatar variant="waving" size={200} />
         <Text style={styles.title}>Alô Clínica</Text>
         <Text style={styles.tagline}>Sua saúde na palma da mão</Text>
       </Animated.View>

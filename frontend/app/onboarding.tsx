@@ -66,7 +66,7 @@ export default function Onboarding() {
         >
           {SLIDES.map((s, i) => (
             <View key={i} style={[styles.slide, { width }]}>
-              <PingoAvatar variant={s.variant} size={220} bg="rgba(255,255,255,0.15)" />
+              <PingoAvatar variant={s.variant} size={220} />
               <Text style={styles.title}>{s.title}</Text>
               <Text style={styles.desc}>{s.desc}</Text>
             </View>

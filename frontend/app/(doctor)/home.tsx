@@ -100,7 +100,7 @@ export default function DoctorHome() {
         ))}
 
         <View style={styles.pingoCard}>
-          <PingoAvatar variant="thumbs_up" size={56} bg="rgba(255,255,255,0.15)" />
+          <PingoAvatar variant="thumbs_up" size={56} />
           <View style={{ flex: 1 }}>
             <Text style={styles.pingoTitle}>Pingo Insights 📊</Text>
             <Text style={styles.pingoDesc}>Você atendeu 15% mais pacientes esta semana!</Text>

@@ -62,7 +62,7 @@ export default function PingoChat() {
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <StatusBar style="dark" />
       <View style={styles.header}>
-        <PingoAvatar variant="clipboard" size={44} bg={COLORS.brandTertiary} />
+        <PingoAvatar variant="clipboard" size={44} />
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Pingo</Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
@@ -90,7 +90,7 @@ export default function PingoChat() {
               key={m.id}
               style={[styles.bubbleRow, m.sender === "user" && { justifyContent: "flex-end" }]}
             >
-              {m.sender === "pingo" && <PingoAvatar variant="clipboard" size={32} bg={COLORS.brandTertiary} />}
+              {m.sender === "pingo" && <PingoAvatar variant="clipboard" size={32} />}
               <View
                 style={[
                   styles.bubble,
