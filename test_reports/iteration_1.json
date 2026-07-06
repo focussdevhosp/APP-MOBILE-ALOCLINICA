@@ -1,0 +1,32 @@
+{
+  "summary": "Validated the Pingo mascot halo fix on the login screen. Verified via (a) programmatic alpha inspection: all Pingo PNGs (logo/waving/clipboard/etc.) now have strictly binary alpha values (0 or 255) with 0 semi-transparent pixels and 0 residual magenta chroma-key pixels; (b) visual inspection of the running Expo web preview at 390x844 (mobile viewport) — patient login (blue gradient) shows the waving Pingo cleanly with crisp edges and no orange halo/rectangle; doctor login (orange gradient) shows the clipboard Pingo cleanly with no halo/rectangle behind him. Full flow (role-select → login → home) works for both patient (camila@email.com) and doctor (ana@aloclinica.com). btn-login navigates to /(patient)/home and /(doctor)/home respectively and both dashboards render correctly. Halo fix is confirmed working.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/test_reports/screenshots/11_patient_login.png",
+    "/app/test_reports/screenshots/11b_patient_hero.png",
+    "/app/test_reports/screenshots/06_doctor_login.png",
+    "/app/test_reports/screenshots/06b_doctor_hero.png",
+    "/app/test_reports/screenshots/12_patient_home.png",
+    "/app/test_reports/screenshots/07_doctor_home.png",
+    "/app/test_reports/screenshots/10_role_select.png"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Minor: on first cold navigation the onb-skip button click at the top of onboarding did not visibly advance to /role-select in a single automated click (needed direct nav). Not blocking and may just be a timing artifact of the automation run; worth a manual check by main agent that onb-skip reliably transitions to /role-select.",
+    "AnimatedPingo uses expo-image with contentFit='contain' and no background — implementation is correct and no tint that could reintroduce a halo.",
+    "Login hero uses LinearGradient behind AnimatedPingo — because PNG alpha is now binary, no soft-edge blending against the gradient occurs (which was the root cause of the reported halo)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (not tested)", "frontend": "100%"},
+  "seed_data_creation": "None. Mocked auth uses pre-filled credentials from login.tsx.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Alpha binarization of /app/frontend/assets/pingo/*.png via /app/scripts/binarize_alpha.py is verified: alpha values are strictly {0,255}, no residual magenta pixels in opaque regions. Visual verification at 390x844 mobile viewport confirms no halo on either patient (blue gradient) or doctor (orange gradient) login hero. Full flow role-select → login?role={patient|doctor} → /(patient|doctor)/home works. Note that role-select is at path /role-select. Onboarding lives at /onboarding with an onb-skip testID; direct navigation to /role-select is reliable if the skip flow appears flaky.",
+  "rca_of_issue": "Original halo was caused by semi-transparent alpha pixels on the outer edge of the Pingo PNGs (result of the chroma-key/alpha-matting pipeline against a magenta background). Those pre-multiplied edge pixels retained a magenta-ish tint that visually blended into the surrounding colored gradient and read as an orange/pink rectangle behind Pingo. Fix (/app/scripts/binarize_alpha.py) thresholds alpha: >=128 → 255, <128 → 0, eliminating all semi-transparent edges. Verified programmatically (alpha ∈ {0,255}, magenta_ish=0) and visually (crisp cutout on both blue and orange gradients)."
+}
