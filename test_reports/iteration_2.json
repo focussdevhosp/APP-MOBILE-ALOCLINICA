@@ -1,0 +1,40 @@
+{
+  "summary": "Verified the login screen layout fix for Alô Clínica (Expo/React Native web preview). The blue/orange hero no longer covers the form card. All required elements are visible for both patient and doctor roles. Login navigation to /home works. All specified testIDs (btn-back, input-email, input-password, btn-login, btn-google, btn-apple, link-register) are present and visible. Fix is confirmed working.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": [
+      {"component": "styles (shadow* deprecated)", "issue": "Console warning: '\"shadow*\" style props are deprecated. Use \"boxShadow\"'. Non-blocking but should be migrated in RN 0.75+. Reference: SHADOW.card in /app/frontend/src/theme (indirect via login.tsx:225,271)"},
+      {"component": "props.pointerEvents deprecated", "issue": "Console warning: 'props.pointerEvents is deprecated. Use style.pointerEvents'. Likely from Pressable/Animated wrappers. Non-blocking."}
+    ]
+  },
+  "test_report_links": [
+    "/app/test_reports/screenshots/03_patient_login.png",
+    "/app/test_reports/screenshots/04_patient_home.png",
+    "/app/test_reports/screenshots/08_doctor_login_direct.png",
+    "/app/test_reports/screenshots/09_doctor_home.png"
+  ],
+  "action_items": [
+    "Optional: Replace SHADOW.card style props with boxShadow syntax to remove deprecation warnings.",
+    "Optional: Migrate props.pointerEvents to style.pointerEvents on affected wrappers."
+  ],
+  "critical_code_review_comments": [
+    "login.tsx (304 lines) is within acceptable size; StyleSheet.create used correctly.",
+    "All interactive elements have testID (btn-back, input-email, input-password, btn-login, btn-google, btn-apple, link-register).",
+    "Hero padding (SPACING.xl) + scroll paddingTop (SPACING.lg) + card marginTop:0 result in a clean, non-overlapping layout at 375x667. 'Entrar na conta' title bounding box (y=334) sits well below hero bottom.",
+    "Login handler is MOCKED (setTimeout → router.replace), which is expected per problem statement.",
+    "Pingo mascot renders with animation; no clipping observed."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A", "frontend": "100%"},
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login screen layout is verified for both patient (blue hero, camila@email.com) and doctor (orange hero, ana@aloclinica.com) roles at mobile viewport 375x667. Both flows navigate to /home on Entrar click. Pre-filled password: 123456. Deep-linking via /login?role=doctor works. Screenshots stored in /app/test_reports/screenshots/.",
+  "rca_of_issue": "Original: ScrollView + card marginTop:-70 caused negative-margin content to be clipped above the ScrollView's origin, hiding the top of the form card behind the hero. Fix (hero paddingBottom:SPACING.xl, card marginTop:0, scroll paddingTop:SPACING.lg, smaller Pingo & title) is confirmed effective — hero ends cleanly above the card and all form elements are visible."
+}

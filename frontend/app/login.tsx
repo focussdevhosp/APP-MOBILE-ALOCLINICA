@@ -59,7 +59,7 @@ export default function Login() {
           </Pressable>
           <View style={styles.heroInner}>
             <Animated.View entering={ZoomIn.duration(600).springify()}>
-              <AnimatedPingo variant={isDoctor ? "clipboard" : "waving"} size={160} animate="alive" />
+              <AnimatedPingo variant={isDoctor ? "clipboard" : "waving"} size={130} animate="alive" />
             </Animated.View>
             <Animated.Text entering={FadeIn.delay(200)} style={styles.hi}>
               {isDoctor ? "Bem-vindo(a),\nDoutor(a)! 👋" : "Que bom te ver\npor aqui! 👋"}
@@ -187,7 +187,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.surfaceSecondary },
   hero: {
-    paddingBottom: 100,
+    paddingBottom: SPACING.xl,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
   },
@@ -204,11 +204,11 @@ const styles = StyleSheet.create({
   heroInner: { alignItems: "center", paddingHorizontal: SPACING.xl, paddingTop: SPACING.md },
   hi: {
     color: "#fff",
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: "800",
     textAlign: "center",
     marginTop: SPACING.sm,
-    lineHeight: 34,
+    lineHeight: 30,
   },
   hiSub: {
     color: "rgba(255,255,255,0.9)",
@@ -216,13 +216,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: SPACING.xs,
   },
-  scroll: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.xxl },
+  scroll: { paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg, paddingBottom: SPACING.xxl },
   card: {
-    marginTop: -70,
+    marginTop: 0,
     backgroundColor: "#fff",
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
-    ...SHADOW.strong,
+    ...SHADOW.card,
   },
   formTitle: { fontSize: FONT.xl, fontWeight: "800", color: COLORS.onSurface, marginBottom: SPACING.lg },
   label: {
