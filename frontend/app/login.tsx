@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   View,
   Text,
@@ -8,22 +8,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Animated, {
-  FadeInDown,
-  FadeIn,
-  ZoomIn,
-} from "react-native-reanimated";
+import Animated, { FadeInUp, ZoomIn } from "react-native-reanimated";
 import AnimatedPingo from "@/src/components/AnimatedPingo";
 import { COLORS, SPACING, RADIUS, FONT, SHADOW } from "@/src/theme";
-
-const { width } = Dimensions.get("window");
 
 export default function Login() {
   const { role } = useLocalSearchParams<{ role?: string }>();
@@ -34,46 +27,20 @@ export default function Login() {
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const primary = isDoctor ? COLORS.brandSecondary : COLORS.brandPrimary;
+
   const handleLogin = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
       if (isDoctor) router.replace("/(doctor)/home");
       else router.replace("/(patient)/home");
-    }, 600);
+    }, 400);
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      {/* Hero */}
-      <LinearGradient
-        colors={
-          isDoctor ? ["#FF9500", "#FF6B00", "#E5570A"] : [COLORS.brandPrimary, "#0056B3", "#003D80"]
-        }
-        style={styles.hero}
-      >
-        <SafeAreaView edges={["top"]}>
-          <Pressable testID="btn-back" onPress={() => router.back()} style={styles.back}>
-            <Ionicons name="chevron-back" size={24} color="#fff" />
-          </Pressable>
-          <View style={styles.heroInner}>
-            <Animated.View entering={ZoomIn.duration(600).springify()}>
-              <AnimatedPingo variant={isDoctor ? "clipboard" : "waving"} size={130} animate="alive" />
-            </Animated.View>
-            <Animated.Text entering={FadeIn.delay(200)} style={styles.hi}>
-              {isDoctor ? "Bem-vindo(a),\nDoutor(a)! 👋" : "Que bom te ver\npor aqui! 👋"}
-            </Animated.Text>
-            <Animated.Text entering={FadeIn.delay(400)} style={styles.hiSub}>
-              {isDoctor
-                ? "Acesse sua agenda e pacientes"
-                : "Entre para cuidar da sua saúde"}
-            </Animated.Text>
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
-
-      {/* Form card */}
+    <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
+      <StatusBar style="dark" />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -83,8 +50,49 @@ export default function Login() {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.card}>
+          {/* Compact header */}
+          <View style={styles.headerRow}>
+            <Pressable testID="btn-back" onPress={() => router.back()} style={styles.back}>
+              <Ionicons name="chevron-back" size={24} color={COLORS.onSurface} />
+            </Pressable>
+            <Text style={styles.stepText}>Entrar</Text>
+            <View style={styles.back} />
+          </View>
+
+          {/* Small Pingo greeting card */}
+          <Animated.View entering={ZoomIn.duration(500).springify()} style={styles.greetCard}>
+            <LinearGradient
+              colors={
+                isDoctor
+                  ? ["#FF9500", "#FF6B00"]
+                  : [COLORS.brandPrimary, COLORS.brandDark]
+              }
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.greetGradient}
+            >
+              <View style={styles.greetText}>
+                <Text style={styles.hi}>
+                  {isDoctor ? "Olá, Doutor(a)!" : "Olá!"}
+                </Text>
+                <Text style={styles.hiSub}>
+                  {isDoctor ? "Sua agenda te espera 💙" : "Vamos cuidar da sua saúde 💙"}
+                </Text>
+              </View>
+              <View style={styles.pingoBox}>
+                <AnimatedPingo
+                  variant={isDoctor ? "clipboard" : "waving"}
+                  size={90}
+                  animate="alive"
+                />
+              </View>
+            </LinearGradient>
+          </Animated.View>
+
+          {/* Form */}
+          <Animated.View entering={FadeInUp.delay(150)} style={styles.form}>
             <Text style={styles.formTitle}>Entrar na conta</Text>
+            <Text style={styles.formDesc}>Preencha seus dados abaixo</Text>
 
             <Text style={styles.label}>E-mail</Text>
             <View style={styles.input}>
@@ -120,13 +128,13 @@ export default function Login() {
 
             <View style={styles.rowBetween}>
               <Pressable style={styles.remember}>
-                <View style={styles.checkbox}>
+                <View style={[styles.checkbox, { backgroundColor: primary }]}>
                   <Ionicons name="checkmark" size={12} color="#fff" />
                 </View>
                 <Text style={styles.rememberText}>Lembrar de mim</Text>
               </Pressable>
               <Pressable>
-                <Text style={styles.forgot}>Esqueci a senha</Text>
+                <Text style={[styles.forgot, { color: primary }]}>Esqueci a senha</Text>
               </Pressable>
             </View>
 
@@ -136,7 +144,7 @@ export default function Login() {
               disabled={loading}
               style={({ pressed }) => [
                 styles.cta,
-                { backgroundColor: isDoctor ? COLORS.brandSecondary : COLORS.brandPrimary },
+                { backgroundColor: primary },
                 pressed && { opacity: 0.9 },
               ]}
             >
@@ -158,11 +166,11 @@ export default function Login() {
 
             <View style={styles.social}>
               <Pressable testID="btn-google" style={styles.socialBtn}>
-                <Ionicons name="logo-google" size={22} color="#DB4437" />
+                <Ionicons name="logo-google" size={20} color="#DB4437" />
                 <Text style={styles.socialText}>Google</Text>
               </Pressable>
               <Pressable testID="btn-apple" style={styles.socialBtn}>
-                <Ionicons name="logo-apple" size={22} color={COLORS.onSurface} />
+                <Ionicons name="logo-apple" size={20} color={COLORS.onSurface} />
                 <Text style={styles.socialText}>Apple</Text>
               </Pressable>
             </View>
@@ -174,57 +182,58 @@ export default function Login() {
             style={styles.registerRow}
           >
             <Text style={styles.registerText}>Não tem uma conta? </Text>
-            <Text style={[styles.registerLink, { color: isDoctor ? COLORS.brandSecondary : COLORS.brandPrimary }]}>
-              Criar agora
-            </Text>
+            <Text style={[styles.registerLink, { color: primary }]}>Criar agora</Text>
           </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.surfaceSecondary },
-  hero: {
-    paddingBottom: SPACING.xl,
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
+  safe: { flex: 1, backgroundColor: COLORS.surface },
+  scroll: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.xl, flexGrow: 1 },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingVertical: SPACING.sm,
   },
   back: {
-    marginHorizontal: SPACING.lg,
-    marginTop: SPACING.sm,
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.2)",
+    backgroundColor: COLORS.surfaceSecondary,
     alignItems: "center",
     justifyContent: "center",
   },
-  heroInner: { alignItems: "center", paddingHorizontal: SPACING.xl, paddingTop: SPACING.md },
-  hi: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "800",
-    textAlign: "center",
+  stepText: { fontSize: FONT.base, fontWeight: "700", color: COLORS.onSurface },
+  greetCard: {
     marginTop: SPACING.sm,
-    lineHeight: 30,
-  },
-  hiSub: {
-    color: "rgba(255,255,255,0.9)",
-    fontSize: FONT.base,
-    textAlign: "center",
-    marginTop: SPACING.xs,
-  },
-  scroll: { paddingHorizontal: SPACING.lg, paddingTop: SPACING.lg, paddingBottom: SPACING.xxl },
-  card: {
-    marginTop: 0,
-    backgroundColor: "#fff",
     borderRadius: RADIUS.lg,
-    padding: SPACING.lg,
+    overflow: "hidden",
     ...SHADOW.card,
   },
-  formTitle: { fontSize: FONT.xl, fontWeight: "800", color: COLORS.onSurface, marginBottom: SPACING.lg },
+  greetGradient: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: SPACING.md,
+    paddingRight: 0,
+    minHeight: 110,
+  },
+  greetText: { flex: 1, paddingRight: SPACING.sm },
+  hi: { color: "#fff", fontSize: 22, fontWeight: "800" },
+  hiSub: { color: "rgba(255,255,255,0.9)", fontSize: FONT.sm, marginTop: 4 },
+  pingoBox: { width: 100, alignItems: "center", justifyContent: "center" },
+  form: {
+    marginTop: SPACING.lg,
+  },
+  formTitle: {
+    fontSize: FONT.xl,
+    fontWeight: "800",
+    color: COLORS.onSurface,
+  },
+  formDesc: { color: COLORS.muted, marginTop: 4, marginBottom: SPACING.md, fontSize: FONT.sm },
   label: {
     fontSize: FONT.sm,
     fontWeight: "600",
@@ -254,28 +263,26 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 5,
-    backgroundColor: COLORS.brandPrimary,
     alignItems: "center",
     justifyContent: "center",
   },
   rememberText: { color: COLORS.onSurfaceSecondary, fontSize: FONT.sm },
-  forgot: { color: COLORS.brandPrimary, fontWeight: "600", fontSize: FONT.sm },
+  forgot: { fontWeight: "600", fontSize: FONT.sm },
   cta: {
     flexDirection: "row",
     gap: SPACING.sm,
-    height: 54,
+    height: 52,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: RADIUS.pill,
     marginTop: SPACING.lg,
-    ...SHADOW.card,
   },
   ctaText: { color: "#fff", fontSize: FONT.lg, fontWeight: "700" },
   divider: {
     flexDirection: "row",
     alignItems: "center",
     gap: SPACING.md,
-    marginVertical: SPACING.lg,
+    marginVertical: SPACING.md,
   },
   line: { flex: 1, height: 1, backgroundColor: COLORS.border },
   dividerText: { color: COLORS.muted, fontSize: FONT.sm },
@@ -286,7 +293,7 @@ const styles = StyleSheet.create({
     gap: SPACING.sm,
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
+    height: 46,
     borderRadius: RADIUS.md,
     borderWidth: 1,
     borderColor: COLORS.border,
@@ -296,7 +303,7 @@ const styles = StyleSheet.create({
   registerRow: {
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: SPACING.xl,
+    marginTop: SPACING.lg,
   },
   registerText: { color: COLORS.muted, fontSize: FONT.base },
   registerLink: { fontSize: FONT.base, fontWeight: "700" },

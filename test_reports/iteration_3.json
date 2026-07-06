@@ -1,0 +1,32 @@
+{
+  "summary": "FINAL layout fix for the 'blue hero covering login form' bug is VERIFIED and PASSING. Tested Patient login (blue gradient) and Doctor login (orange gradient) on 390x844 viewport. Compact greeting card sits at the TOP (Pingo mascot on right ~90px, greeting text on left), and the ENTIRE form below is visible within the viewport without any scrolling: btn-back(top=8), input-email(top=283), input-password(top=365), btn-login(top=445, bottom=497), btn-google/apple(top=535), link-register(bottom=613) — all within 844px. Zero overlap between the greeting card and any form element. Pre-filled credentials confirmed (camila@email.com / ana@aloclinica.com / 123456). Tapping btn-login navigates to patient home and doctor home respectively (mocked auth working).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": [
+      {"component": "pointerEvents prop (react-native-web)", "issue": "Non-blocking console warning: 'props.pointerEvents is deprecated. Use style.pointerEvents'. Likely coming from a library (Reanimated/Ionicons) — worth checking if any custom component uses pointerEvents as a prop instead of style.pointerEvents. Not caused by login.tsx itself."}
+    ]
+  },
+  "test_report_links": [
+    "/app/test_reports/screenshots/03_patient_login.png",
+    "/app/test_reports/screenshots/04_patient_home.png",
+    "/app/test_reports/screenshots/doctor_login.png",
+    "/app/test_reports/screenshots/doctor_home.png"
+  ],
+  "action_items": [
+    "Optional: investigate deprecated pointerEvents warning source (non-blocking, may come from a dependency)."
+  ],
+  "critical_code_review_comments": [
+    "login.tsx (191 lines) is clean, uses SafeAreaView + KeyboardAvoidingView + ScrollView, no absolute positioning, all testIDs present, StyleSheet.create used, LinearGradient/Ionicons/AnimatedPingo composition is correct.",
+    "Greeting card minHeight=110 with paddingRight:0 and Pingo box width=100 aligns the mascot flush to the right — layout matches the requested compact horizontal design."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (frontend-only test)", "frontend": "100%"},
+  "seed_data_creation": "None — using existing mocks in /app/frontend/src/mockData.ts",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Login layout fix is done. Direct URL navigation https://pingo-clinic.preview.emergentagent.com/login?role=doctor works to bypass role-select. After login, both roles land on /home (Expo Router group routing (patient)/(doctor) resolves to /home path). Patient home shows Camila dashboard, doctor home shows Dra. Ana Ribeiro dashboard.",
+  "rca_of_issue": "Previous bug (blue hero covering form) was caused by absolute-positioned tall gradient / negative margins. FIX: restructured login.tsx into a single ScrollView column — Header row → 110px compact horizontal greeting card (LinearGradient with row layout: text-left + Pingo-right) → Form. No absolute positioning, no overlays. Verified via getBoundingClientRect that no element overlaps another and all fit in 844px."
+}
