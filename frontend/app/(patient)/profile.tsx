@@ -42,7 +42,7 @@ export default function Profile() {
         <Menu icon="moon-outline" title="Aparência" value="Sistema" onPress={() => {}} testID="m-theme" />
 
         <Text style={styles.section}>Suporte</Text>
-        <Menu icon="help-circle-outline" title="Central de ajuda" onPress={() => {}} testID="m-help" />
+        <Menu icon="help-circle-outline" title="Central de ajuda" onPress={() => router.push("/(patient)/help")} testID="m-help" />
         <Menu icon="chatbubble-outline" title="Fale conosco" onPress={() => {}} testID="m-contact" />
         <Menu icon="document-text-outline" title="Termos e Privacidade" onPress={() => {}} testID="m-terms" />
         <Menu icon="star-outline" title="Avaliar app" onPress={() => {}} testID="m-rate" />

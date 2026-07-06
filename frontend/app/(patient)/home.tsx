@@ -13,6 +13,8 @@ import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import PingoAvatar from "@/src/components/PingoAvatar";
+import AnimatedPingo from "@/src/components/AnimatedPingo";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import { COLORS, SPACING, RADIUS, FONT, SHADOW } from "@/src/theme";
 import { SPECIALTIES, DOCTORS, APPOINTMENTS, PATIENT_ME } from "@/src/mockData";
 
@@ -34,7 +36,7 @@ export default function PatientHome() {
               <Text testID="patient-name" style={styles.userName}>{PATIENT_ME.name.split(" ")[0]} 👋</Text>
             </View>
           </View>
-          <Pressable testID="btn-notif" style={styles.iconBtn}>
+          <Pressable testID="btn-notif" onPress={() => router.push("/(patient)/notifications")} style={styles.iconBtn}>
             <Ionicons name="notifications-outline" size={22} color={COLORS.onSurface} />
             <View style={styles.dot} />
           </Pressable>
@@ -135,7 +137,7 @@ export default function PatientHome() {
         </View>
 
         {/* Pingo Banner */}
-        <View style={styles.banner}>
+        <Animated.View entering={FadeInUp.delay(300).springify()} style={styles.banner}>
           <LinearGradient
             colors={[COLORS.brandSecondary, "#FF6B00"]}
             start={{ x: 0, y: 0 }}
@@ -147,9 +149,9 @@ export default function PatientHome() {
               <Text style={styles.bannerTitle}>1ª consulta{"\n"}50% OFF</Text>
               <Text style={styles.bannerDesc}>Clínico geral · Videoconsulta</Text>
             </View>
-            <PingoAvatar variant="celebrating" size={110} bg="transparent" round={false} />
+            <AnimatedPingo variant="celebrating" size={120} animate="alive" />
           </LinearGradient>
-        </View>
+        </Animated.View>
 
         {/* Specialties */}
         <SectionHeader title="Especialidades" onPress={() => router.push("/(patient)/search")} />
@@ -203,7 +205,7 @@ export default function PatientHome() {
           onPress={() => router.push("/(patient)/pingo")}
           style={styles.pingoCard}
         >
-          <PingoAvatar variant="heart" size={64} bg="transparent" round={false} />
+          <PingoAvatar variant="heart" size={64} />
           <View style={{ flex: 1 }}>
             <Text style={styles.pingoTitle}>Pergunte ao Pingo 🐧</Text>
             <Text style={styles.pingoDesc}>

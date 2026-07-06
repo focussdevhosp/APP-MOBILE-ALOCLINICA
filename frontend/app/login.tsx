@@ -16,17 +16,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withSequence,
-  withTiming,
-  withDelay,
-  Easing,
   FadeInDown,
   FadeIn,
+  ZoomIn,
 } from "react-native-reanimated";
-import PingoAvatar from "@/src/components/PingoAvatar";
+import AnimatedPingo from "@/src/components/AnimatedPingo";
 import { COLORS, SPACING, RADIUS, FONT, SHADOW } from "@/src/theme";
 
 const { width } = Dimensions.get("window");
@@ -39,35 +33,6 @@ export default function Login() {
   const [password, setPassword] = useState("123456");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const bounce = useSharedValue(0);
-  const rot = useSharedValue(0);
-
-  useEffect(() => {
-    bounce.value = withRepeat(
-      withSequence(
-        withTiming(-8, { duration: 900, easing: Easing.inOut(Easing.ease) }),
-        withTiming(0, { duration: 900, easing: Easing.inOut(Easing.ease) })
-      ),
-      -1
-    );
-    rot.value = withDelay(
-      500,
-      withRepeat(
-        withSequence(
-          withTiming(-6, { duration: 500 }),
-          withTiming(6, { duration: 500 }),
-          withTiming(0, { duration: 500 }),
-          withDelay(2000, withTiming(0, { duration: 100 }))
-        ),
-        -1
-      )
-    );
-  }, []);
-
-  const pingoAnim = useAnimatedStyle(() => ({
-    transform: [{ translateY: bounce.value }, { rotate: `${rot.value}deg` }],
-  }));
 
   const handleLogin = () => {
     setLoading(true);
@@ -93,8 +58,8 @@ export default function Login() {
             <Ionicons name="chevron-back" size={24} color="#fff" />
           </Pressable>
           <View style={styles.heroInner}>
-            <Animated.View style={pingoAnim}>
-              <PingoAvatar variant={isDoctor ? "clipboard" : "waving"} size={140} />
+            <Animated.View entering={ZoomIn.duration(600).springify()}>
+              <AnimatedPingo variant={isDoctor ? "clipboard" : "waving"} size={160} animate="alive" />
             </Animated.View>
             <Animated.Text entering={FadeIn.delay(200)} style={styles.hi}>
               {isDoctor ? "Bem-vindo(a),\nDoutor(a)! 👋" : "Que bom te ver\npor aqui! 👋"}
@@ -222,7 +187,7 @@ export default function Login() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.surfaceSecondary },
   hero: {
-    paddingBottom: 80,
+    paddingBottom: 100,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
   },
@@ -253,7 +218,7 @@ const styles = StyleSheet.create({
   },
   scroll: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.xxl },
   card: {
-    marginTop: -60,
+    marginTop: -70,
     backgroundColor: "#fff",
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,

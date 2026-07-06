@@ -5,6 +5,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import PingoAvatar, { PingoVariant } from "@/src/components/PingoAvatar";
+import AnimatedPingo from "@/src/components/AnimatedPingo";
 import { COLORS, SPACING, RADIUS, FONT, SHADOW } from "@/src/theme";
 
 const { width } = Dimensions.get("window");
@@ -66,7 +67,7 @@ export default function Onboarding() {
         >
           {SLIDES.map((s, i) => (
             <View key={i} style={[styles.slide, { width }]}>
-              <PingoAvatar variant={s.variant} size={220} />
+              <AnimatedPingo variant={s.variant} size={240} animate="alive" />
               <Text style={styles.title}>{s.title}</Text>
               <Text style={styles.desc}>{s.desc}</Text>
             </View>

@@ -153,10 +153,10 @@ export default function Booking() {
           <Pressable
             testID="confirm-book"
             disabled={!time}
-            onPress={() => setConfirmed(true)}
+            onPress={() => router.push(`/(patient)/payment?doctor=${doctor.id}`)}
             style={[styles.confirmBtn, !time && { opacity: 0.5 }]}
           >
-            <Text style={styles.confirmText}>Confirmar</Text>
+            <Text style={styles.confirmText}>Ir para pagamento</Text>
           </Pressable>
         </View>
       </SafeAreaView>

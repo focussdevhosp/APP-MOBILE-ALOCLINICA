@@ -129,7 +129,11 @@ function AppointmentCard({ item, router }: { item: Appointment; router: any }) {
           >
             <Text style={styles.secondaryActionText}>Ver receita</Text>
           </Pressable>
-          <Pressable style={[styles.secondaryAction, { flex: 1 }]}>
+          <Pressable
+            testID={`rx-${item.id}`}
+            onPress={() => router.push(`/(patient)/rate?id=${item.doctorId}`)}
+            style={[styles.secondaryAction, { flex: 1 }]}
+          >
             <Text style={styles.secondaryActionText}>Avaliar</Text>
           </Pressable>
         </View>

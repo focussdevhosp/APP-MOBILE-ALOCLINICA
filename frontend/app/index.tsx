@@ -13,6 +13,7 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import PingoAvatar from "@/src/components/PingoAvatar";
+import AnimatedPingo from "@/src/components/AnimatedPingo";
 import { COLORS, SPACING, FONT } from "@/src/theme";
 
 const { width } = Dimensions.get("window");
@@ -61,8 +62,9 @@ export default function Splash() {
     transform: [{ scale: scale.value }, { translateY: bounce.value }],
   }));
 
-  const dotStyle = (v: Animated.SharedValue<number>) =>
-    useAnimatedStyle(() => ({ opacity: v.value }));
+  const dot1Style = useAnimatedStyle(() => ({ opacity: dot1.value }));
+  const dot2Style = useAnimatedStyle(() => ({ opacity: dot2.value }));
+  const dot3Style = useAnimatedStyle(() => ({ opacity: dot3.value }));
 
   return (
     <View style={styles.container}>
@@ -72,14 +74,14 @@ export default function Splash() {
         style={StyleSheet.absoluteFill}
       />
       <Animated.View style={[styles.center, logoStyle]}>
-        <PingoAvatar variant="waving" size={200} />
+        <AnimatedPingo variant="waving" size={220} animate="alive" />
         <Text style={styles.title}>Alô Clínica</Text>
         <Text style={styles.tagline}>Sua saúde na palma da mão</Text>
       </Animated.View>
       <View style={styles.dotsRow}>
-        <Animated.View style={[styles.dot, dotStyle(dot1)]} />
-        <Animated.View style={[styles.dot, dotStyle(dot2)]} />
-        <Animated.View style={[styles.dot, dotStyle(dot3)]} />
+        <Animated.View style={[styles.dot, dot1Style]} />
+        <Animated.View style={[styles.dot, dot2Style]} />
+        <Animated.View style={[styles.dot, dot3Style]} />
       </View>
     </View>
   );
