@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,51 +8,119 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Dimensions,
 } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  withDelay,
+  Easing,
+  FadeInDown,
+  FadeIn,
+} from "react-native-reanimated";
 import PingoAvatar from "@/src/components/PingoAvatar";
 import { COLORS, SPACING, RADIUS, FONT, SHADOW } from "@/src/theme";
+
+const { width } = Dimensions.get("window");
 
 export default function Login() {
   const { role } = useLocalSearchParams<{ role?: string }>();
   const router = useRouter();
-  const [email, setEmail] = useState(role === "doctor" ? "ana@aloclinica.com" : "camila@email.com");
+  const isDoctor = role === "doctor";
+  const [email, setEmail] = useState(isDoctor ? "ana@aloclinica.com" : "camila@email.com");
   const [password, setPassword] = useState("123456");
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const isDoctor = role === "doctor";
+  const bounce = useSharedValue(0);
+  const rot = useSharedValue(0);
+
+  useEffect(() => {
+    bounce.value = withRepeat(
+      withSequence(
+        withTiming(-8, { duration: 900, easing: Easing.inOut(Easing.ease) }),
+        withTiming(0, { duration: 900, easing: Easing.inOut(Easing.ease) })
+      ),
+      -1
+    );
+    rot.value = withDelay(
+      500,
+      withRepeat(
+        withSequence(
+          withTiming(-6, { duration: 500 }),
+          withTiming(6, { duration: 500 }),
+          withTiming(0, { duration: 500 }),
+          withDelay(2000, withTiming(0, { duration: 100 }))
+        ),
+        -1
+      )
+    );
+  }, []);
+
+  const pingoAnim = useAnimatedStyle(() => ({
+    transform: [{ translateY: bounce.value }, { rotate: `${rot.value}deg` }],
+  }));
 
   const handleLogin = () => {
-    if (isDoctor) router.replace("/(doctor)/home");
-    else router.replace("/(patient)/home");
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      if (isDoctor) router.replace("/(doctor)/home");
+      else router.replace("/(patient)/home");
+    }, 600);
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-      <StatusBar style="dark" />
+    <View style={styles.container}>
+      <StatusBar style="light" />
+      {/* Hero */}
+      <LinearGradient
+        colors={
+          isDoctor ? ["#FF9500", "#FF6B00", "#E5570A"] : [COLORS.brandPrimary, "#0056B3", "#003D80"]
+        }
+        style={styles.hero}
+      >
+        <SafeAreaView edges={["top"]}>
+          <Pressable testID="btn-back" onPress={() => router.back()} style={styles.back}>
+            <Ionicons name="chevron-back" size={24} color="#fff" />
+          </Pressable>
+          <View style={styles.heroInner}>
+            <Animated.View style={pingoAnim}>
+              <PingoAvatar variant={isDoctor ? "clipboard" : "waving"} size={140} />
+            </Animated.View>
+            <Animated.Text entering={FadeIn.delay(200)} style={styles.hi}>
+              {isDoctor ? "Bem-vindo(a),\nDoutor(a)! 👋" : "Que bom te ver\npor aqui! 👋"}
+            </Animated.Text>
+            <Animated.Text entering={FadeIn.delay(400)} style={styles.hiSub}>
+              {isDoctor
+                ? "Acesse sua agenda e pacientes"
+                : "Entre para cuidar da sua saúde"}
+            </Animated.Text>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
+
+      {/* Form card */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
       >
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-          <Pressable testID="btn-back" onPress={() => router.back()} style={styles.back}>
-            <Ionicons name="chevron-back" size={26} color={COLORS.onSurface} />
-          </Pressable>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          <Animated.View entering={FadeInDown.delay(300).springify()} style={styles.card}>
+            <Text style={styles.formTitle}>Entrar na conta</Text>
 
-          <View style={styles.header}>
-            <PingoAvatar variant="waving" size={96} bg={COLORS.brandTertiary} />
-            <Text style={styles.title}>
-              {isDoctor ? "Bem-vindo(a), Doutor(a)!" : "Bem-vindo(a) de volta!"}
-            </Text>
-            <Text style={styles.subtitle}>
-              Entre para continuar acessando a plataforma
-            </Text>
-          </View>
-
-          <View style={styles.form}>
             <Text style={styles.label}>E-mail</Text>
             <View style={styles.input}>
               <Ionicons name="mail-outline" size={20} color={COLORS.muted} />
@@ -85,16 +153,36 @@ export default function Login() {
               </Pressable>
             </View>
 
-            <Pressable style={styles.forgot}>
-              <Text style={styles.forgotText}>Esqueci minha senha</Text>
-            </Pressable>
+            <View style={styles.rowBetween}>
+              <Pressable style={styles.remember}>
+                <View style={styles.checkbox}>
+                  <Ionicons name="checkmark" size={12} color="#fff" />
+                </View>
+                <Text style={styles.rememberText}>Lembrar de mim</Text>
+              </Pressable>
+              <Pressable>
+                <Text style={styles.forgot}>Esqueci a senha</Text>
+              </Pressable>
+            </View>
 
             <Pressable
               testID="btn-login"
               onPress={handleLogin}
-              style={({ pressed }) => [styles.cta, pressed && { opacity: 0.9 }]}
+              disabled={loading}
+              style={({ pressed }) => [
+                styles.cta,
+                { backgroundColor: isDoctor ? COLORS.brandSecondary : COLORS.brandPrimary },
+                pressed && { opacity: 0.9 },
+              ]}
             >
-              <Text style={styles.ctaText}>Entrar</Text>
+              {loading ? (
+                <Text style={styles.ctaText}>Entrando...</Text>
+              ) : (
+                <>
+                  <Text style={styles.ctaText}>Entrar</Text>
+                  <Ionicons name="arrow-forward" size={20} color="#fff" />
+                </>
+              )}
             </Pressable>
 
             <View style={styles.divider}>
@@ -104,50 +192,74 @@ export default function Login() {
             </View>
 
             <View style={styles.social}>
-              <Pressable style={styles.socialBtn}>
+              <Pressable testID="btn-google" style={styles.socialBtn}>
                 <Ionicons name="logo-google" size={22} color="#DB4437" />
                 <Text style={styles.socialText}>Google</Text>
               </Pressable>
-              <Pressable style={styles.socialBtn}>
+              <Pressable testID="btn-apple" style={styles.socialBtn}>
                 <Ionicons name="logo-apple" size={22} color={COLORS.onSurface} />
                 <Text style={styles.socialText}>Apple</Text>
               </Pressable>
             </View>
+          </Animated.View>
 
-            <Pressable
-              testID="link-register"
-              onPress={() => router.push(`/register?role=${role || "patient"}`)}
-              style={styles.registerRow}
-            >
-              <Text style={styles.registerText}>Não tem conta? </Text>
-              <Text style={styles.registerLink}>Criar agora</Text>
-            </Pressable>
-          </View>
+          <Pressable
+            testID="link-register"
+            onPress={() => router.push(`/register?role=${role || "patient"}`)}
+            style={styles.registerRow}
+          >
+            <Text style={styles.registerText}>Não tem uma conta? </Text>
+            <Text style={[styles.registerLink, { color: isDoctor ? COLORS.brandSecondary : COLORS.brandPrimary }]}>
+              Criar agora
+            </Text>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: COLORS.surface },
-  scroll: { flexGrow: 1, padding: SPACING.xl, paddingBottom: SPACING.xxl },
-  back: { alignSelf: "flex-start", padding: SPACING.xs },
-  header: { alignItems: "center", marginTop: SPACING.md },
-  title: {
-    fontSize: FONT.xxl,
+  container: { flex: 1, backgroundColor: COLORS.surfaceSecondary },
+  hero: {
+    paddingBottom: 80,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  back: {
+    marginHorizontal: SPACING.lg,
+    marginTop: SPACING.sm,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  heroInner: { alignItems: "center", paddingHorizontal: SPACING.xl, paddingTop: SPACING.md },
+  hi: {
+    color: "#fff",
+    fontSize: 28,
     fontWeight: "800",
-    color: COLORS.onSurface,
-    marginTop: SPACING.md,
     textAlign: "center",
+    marginTop: SPACING.sm,
+    lineHeight: 34,
   },
-  subtitle: {
+  hiSub: {
+    color: "rgba(255,255,255,0.9)",
     fontSize: FONT.base,
-    color: COLORS.muted,
-    marginTop: SPACING.xs,
     textAlign: "center",
+    marginTop: SPACING.xs,
   },
-  form: { marginTop: SPACING.xl },
+  scroll: { paddingHorizontal: SPACING.lg, paddingBottom: SPACING.xxl },
+  card: {
+    marginTop: -60,
+    backgroundColor: "#fff",
+    borderRadius: RADIUS.lg,
+    padding: SPACING.lg,
+    ...SHADOW.strong,
+  },
+  formTitle: { fontSize: FONT.xl, fontWeight: "800", color: COLORS.onSurface, marginBottom: SPACING.lg },
   label: {
     fontSize: FONT.sm,
     fontWeight: "600",
@@ -165,15 +277,31 @@ const styles = StyleSheet.create({
     height: 52,
     backgroundColor: COLORS.surfaceSecondary,
   },
-  textInput: { flex: 1, fontSize: FONT.lg, color: COLORS.onSurface },
-  forgot: { alignSelf: "flex-end", marginTop: SPACING.sm },
-  forgotText: { color: COLORS.brandPrimary, fontWeight: "600" },
-  cta: {
+  textInput: { flex: 1, fontSize: FONT.base, color: COLORS.onSurface },
+  rowBetween: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: SPACING.md,
+  },
+  remember: { flexDirection: "row", alignItems: "center", gap: 8 },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 5,
     backgroundColor: COLORS.brandPrimary,
-    borderRadius: RADIUS.md,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rememberText: { color: COLORS.onSurfaceSecondary, fontSize: FONT.sm },
+  forgot: { color: COLORS.brandPrimary, fontWeight: "600", fontSize: FONT.sm },
+  cta: {
+    flexDirection: "row",
+    gap: SPACING.sm,
     height: 54,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: RADIUS.pill,
     marginTop: SPACING.lg,
     ...SHADOW.card,
   },
@@ -197,10 +325,14 @@ const styles = StyleSheet.create({
     borderRadius: RADIUS.md,
     borderWidth: 1,
     borderColor: COLORS.border,
-    backgroundColor: COLORS.surface,
+    backgroundColor: "#fff",
   },
   socialText: { fontWeight: "600", color: COLORS.onSurface },
-  registerRow: { flexDirection: "row", justifyContent: "center", marginTop: SPACING.xl },
+  registerRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: SPACING.xl,
+  },
   registerText: { color: COLORS.muted, fontSize: FONT.base },
-  registerLink: { color: COLORS.brandPrimary, fontSize: FONT.base, fontWeight: "700" },
+  registerLink: { fontSize: FONT.base, fontWeight: "700" },
 });

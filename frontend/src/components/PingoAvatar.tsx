@@ -27,8 +27,8 @@ type Props = {
 export default function PingoAvatar({
   variant = "logo",
   size = 64,
-  bg,
-  round = true,
+  bg = "transparent",
+  round = false,
   style,
 }: Props) {
   const source: ImageSource = VARIANTS[variant];
@@ -39,8 +39,8 @@ export default function PingoAvatar({
         {
           width: size,
           height: size,
-          borderRadius: round ? RADIUS.pill : RADIUS.md,
-          backgroundColor: bg ?? COLORS.brandTertiary,
+          borderRadius: round ? RADIUS.pill : 0,
+          backgroundColor: bg,
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
@@ -50,7 +50,7 @@ export default function PingoAvatar({
     >
       <Image
         source={source}
-        style={{ width: size * 0.95, height: size * 0.95 }}
+        style={{ width: size, height: size }}
         contentFit="contain"
         transition={200}
       />
